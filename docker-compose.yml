@@ -1,0 +1,18 @@
+version: '3.5'
+
+services:
+
+  backend:
+    container_name: symfony
+    build:
+      context: ./docker/symfony
+    volumes:
+      - ./:/var/www/symfony
+    working_dir: /var/www/symfony
+    ports:
+      - '8000:8000'
+    environment:
+      XDEBUG_CONFIG: 'remote_enable=1 remote_host=172.17.0.1'
+      PHP_IDE_CONFIG: 'serverName=symfony'
+      COMPOSER_ALLOW_SUPERUSER: 1
+    command: symfony server:start

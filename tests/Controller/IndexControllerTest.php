@@ -12,8 +12,8 @@ class IndexControllerTest extends WebTestCase
     public function testIndex()
     {
         $client = static::createClient();
-        $client->request('GET', '/index');
+        $client->request('GET', '/index', ['phrase' => 'hello world!']);
         $response = $this->assertJsonResponse($client->getResponse());
-        $this->assertSame('hello world', $response);
+        $this->assertSame('hello world!', $response);
     }
 }

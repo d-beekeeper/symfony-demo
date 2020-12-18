@@ -2,6 +2,15 @@ version: '3.5'
 
 services:
 
+  tests:
+    image: "lehrermarktplatz/php-dev-test:latest"
+    command: ["-s", "basic"]
+    environment:
+      APP_HOST: "backend"
+      APP_PORT: "8000"
+    depends_on:
+      - backend
+
   backend:
     container_name: symfony
     build:

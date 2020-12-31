@@ -2,16 +2,12 @@
 
 namespace App\Task\Application\Commands;
 
-use App\Infrastructure\Interfaces\ControllerSupportedCommandQueryInterface;
 use App\Task\Domain\Aggregates\Task\Task;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class UpdateTaskCommand implements ControllerSupportedCommandQueryInterface
+class UpdateTaskCommand
 {
-    /**
-     * @Assert\NotBlank()
-     */
     protected Task $task;
 
     /**
@@ -25,16 +21,18 @@ class UpdateTaskCommand implements ControllerSupportedCommandQueryInterface
      */
     protected string $description;
 
-    public static function fromRequest(Request $request)
+    public static function fromRequest(Request $request, Task $task)
     {
         return new self(
+            $task,
             trim($request->get('title', '')),
             trim($request->get('description', '')),
         );
     }
 
-    public function __construct(string $title, string $description)
+    public function __construct(Task $task, string $title, string $description)
     {
+        $this->task = $task;
         $this->title = $title;
         $this->description = $description;
     }
@@ -52,10 +50,5 @@ class UpdateTaskCommand implements ControllerSupportedCommandQueryInterface
     public function getTask(): Task
     {
         return $this->task;
-    }
-
-    public function setTask(Task $task)
-    {
-        $this->task = $task;
     }
 }

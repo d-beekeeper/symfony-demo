@@ -10,6 +10,7 @@ use App\Task\Application\Queries\ViewTaskQuery;
 use App\Task\Application\Queries\ListTasksQuery;
 use App\Task\Domain\Aggregates\Task\Task;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Uid\Uuid;
@@ -50,9 +51,9 @@ class TaskController
     /**
      * @Route("/{id}", methods={"PUT"}, name="update")
      */
-    public function update(Task $task, UpdateTaskCommand $command, MessageBusInterface $queryBus, MessageBusInterface $commandBus)
+    public function update(Task $task, Request $request, MessageBusInterface $queryBus, MessageBusInterface $commandBus)
     {
-        $command->setTask($task);
+        $command = UpdateTaskCommand::fromRequest($request, $task);
         $commandBus->dispatch($command);
         return new JsonResponse($this->handle(new ViewTaskQuery($task->getId()), $queryBus));
     }
@@ -60,9 +61,9 @@ class TaskController
     /**
      * @Route("/{id}/complete", methods={"PUT"}, name="complete")
      */
-    public function complete(Task $task, CompleteTaskCommand $command, MessageBusInterface $queryBus, MessageBusInterface $commandBus)
+    public function complete(Task $task, MessageBusInterface $queryBus, MessageBusInterface $commandBus)
     {
-        $command->setTask($task);
+        $command = new CompleteTaskCommand($task);
         $commandBus->dispatch($command);
         return new JsonResponse($this->handle(new ViewTaskQuery($task->getId()), $queryBus));
     }

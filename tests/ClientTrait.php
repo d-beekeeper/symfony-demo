@@ -14,7 +14,7 @@ trait ClientTrait
     public function assertJsonResponse(Response $response, int $expectedStatusCode = 200)
     {
         $body = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
-        $this->assertEquals($expectedStatusCode, $response->getStatusCode(), print_r($body, true));
+        $this->assertEquals($expectedStatusCode, $response->getStatusCode());
         return $body;
     }
 }

@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: true
+
+  fixtures:
+    namespace: App\Tests\Functional\Fixtures\
+    resource: '%kernel.project_dir%/tests/Functional/Fixtures/**'

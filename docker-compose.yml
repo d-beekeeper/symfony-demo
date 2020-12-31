@@ -2,15 +2,6 @@ version: '3.5'
 
 services:
 
-  tests:
-    image: "lehrermarktplatz/php-dev-test:latest"
-    command: ["-s", "basic"]
-    environment:
-      APP_HOST: "backend"
-      APP_PORT: "8000"
-    depends_on:
-      - backend
-
   backend:
     container_name: symfony
     build:
@@ -24,4 +15,16 @@ services:
       XDEBUG_CONFIG: 'remote_enable=1 remote_host=172.17.0.1'
       PHP_IDE_CONFIG: 'serverName=symfony'
       COMPOSER_ALLOW_SUPERUSER: 1
+    depends_on:
+      - postgres
     command: symfony server:start
+
+  postgres:
+    container_name: postgres
+    image: fintrace/postgres-uuid
+    environment:
+      POSTGRES_DB: 'symfony'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+    volumes:
+      - ./data/postgresql:/var/lib/postgresql/data

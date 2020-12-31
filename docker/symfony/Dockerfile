@@ -30,6 +30,7 @@ RUN apt-get install -y libsqlite3-dev
 RUN docker-php-ext-install pdo
 RUN docker-php-ext-install ctype
 RUN docker-php-ext-install json
+RUN docker-php-ext-install pdo_pgsql
 RUN docker-php-ext-install pdo_sqlite
 RUN docker-php-ext-install intl
 RUN docker-php-ext-install xml

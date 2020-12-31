@@ -62,6 +62,9 @@ class Task implements EntityInterface
         $this->isActive = $isActive;
     }
 
+    /**
+     * @throws TaskAlreadyCompletedException
+     */
     public function complete()
     {
         if ($this->isCompleted()) {
@@ -87,6 +90,9 @@ class Task implements EntityInterface
         return $this->title;
     }
 
+    /**
+     * @throws CompletedTaskCannotBeEditedException
+     */
     public function setTitle(string $title)
     {
         if ($this->isCompleted()) {
@@ -100,6 +106,9 @@ class Task implements EntityInterface
         return $this->description;
     }
 
+    /**
+     * @throws CompletedTaskCannotBeEditedException
+     */
     public function setDescription(string $description)
     {
         if ($this->isCompleted()) {

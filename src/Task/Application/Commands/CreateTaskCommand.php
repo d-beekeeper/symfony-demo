@@ -26,7 +26,7 @@ class CreateTaskCommand implements ControllerSupportedCommandQueryInterface
      */
     protected string $responsibleEmail;
 
-    public static function fromRequest(Request $request)
+    public static function fromRequest(Request $request): self
     {
         return new self(
             trim($request->get('title', '')),

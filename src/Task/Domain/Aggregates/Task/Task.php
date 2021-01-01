@@ -41,9 +41,9 @@ class Task implements EntityInterface
      */
     protected bool $isActive = true;
 
-    public static function create(string $title, string $description, EmailAddress $responsibleEmail): Task
+    public static function create(string $title, string $description, EmailAddress $responsibleEmail): self
     {
-        $task = new static($title, $description, $responsibleEmail);
+        $task = new self($title, $description, $responsibleEmail);
         Events::add(new TaskCreatedEvent(
             $task->id,
             $task->title,

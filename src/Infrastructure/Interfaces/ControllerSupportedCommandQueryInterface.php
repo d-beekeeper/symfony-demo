@@ -6,5 +6,5 @@ use Symfony\Component\HttpFoundation\Request;
 
 interface ControllerSupportedCommandQueryInterface
 {
-    public static function fromRequest(Request $request);
+    public static function fromRequest(Request $request): self;
 }

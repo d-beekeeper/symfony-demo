@@ -21,7 +21,7 @@ class UpdateTaskCommand
      */
     protected string $description;
 
-    public static function fromRequest(Request $request, Task $task)
+    public static function fromRequest(Request $request, Task $task): self
     {
         return new self(
             $task,

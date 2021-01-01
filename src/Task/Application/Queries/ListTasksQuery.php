@@ -11,9 +11,9 @@ class ListTasksQuery implements ControllerSupportedCommandQueryInterface
     protected ?int $limit = null;
     protected ?int $offset = null;
 
-    public static function fromRequest(Request $request)
+    public static function fromRequest(Request $request): self
     {
-        return new static(
+        return new self(
             $request->get('limit'),
             $request->get('offset'),
         );

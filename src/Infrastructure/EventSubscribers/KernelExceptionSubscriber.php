@@ -3,9 +3,11 @@
 namespace App\Infrastructure\EventSubscribers;
 
 use App\Shared\Exceptions\DomainException;
+use App\Shared\Exceptions\NotFoundException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\Exception\ValidationFailedException;
@@ -22,20 +24,28 @@ class KernelExceptionSubscriber implements EventSubscriberInterface
 
     public function onKernelException(ExceptionEvent $event)
     {
-        $exception = $event->getThrowable();
-        if ($exception instanceof HandlerFailedException && $exception->getPrevious()) {
-            $exception = $exception->getPrevious();
+        $e = $event->getThrowable();
+        if ($e instanceof HandlerFailedException && $e->getPrevious()) {
+            $e = $e->getPrevious();
         }
 
-        if ($exception instanceof DomainException || $exception instanceof ValidationFailedException) {
-            $code = 400;
-        } else {
-            $code = 500;
-        }
+        $body = [
+            'message' => $e->getMessage(),
+            'code' => $e->getCode(),
+        ];
 
-        $event->setResponse(new JsonResponse([
-            'message' => $exception->getMessage(),
-            'code' => $exception->getCode(),
-        ], $code));
+        switch (true) {
+            case $e instanceof HttpException:
+                $event->setResponse(new JsonResponse($body, $e->getStatusCode(), $e->getHeaders()));
+                break;
+            case $e instanceof DomainException || $e instanceof ValidationFailedException:
+                $event->setResponse(new JsonResponse($body, 400));
+                break;
+            case $e instanceof NotFoundException:
+                $event->setResponse(new JsonResponse($body, 404));
+                break;
+            default:
+                $event->setResponse(new JsonResponse($body, 500));
+        }
     }
 }

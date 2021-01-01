@@ -24,8 +24,9 @@ class CreateTaskCommandHandler implements MessageHandlerInterface
             $command->getDescription(),
             new EmailAddress($command->getResponsibleEmail()),
         );
-        $this->doctrine->getManager()->persist($task);
-        $this->doctrine->getManager()->flush();
+        $em = $this->doctrine->getManager();
+        $em->persist($task);
+        $em->flush();
         return $task->getId();
     }
 }
